@@ -1,0 +1,142 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+
+<main class="layout layout--3">
+  <div class="container">
+    <!-- Topics Start -->
+    <div class="topics">
+      <div class="topics__header">
+
+        <h2>Browse Topics
+          <span class="mobile_topics mobile_topics_s">Hide</span>
+        </h2>
+
+      </div>
+      <ul class="topics__list">
+
+
+        {% include 'base/components/topics.html' %}
+
+      </ul>
+      <a class="btn btn--link" href="topics.html">
+        More
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+          <title>chevron-down</title>
+          <path d="M16 21l-13-13h-3l16 16 16-16h-3l-13 13z"></path>
+        </svg>
+      </a>
+    </div>
+    <!-- Topics End -->
+
+    <!-- Room List Start -->
+    <div class="roomList">
+      <div class="mobile-menu">
+        <form class="header__search">
+          <label>
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+              <title>search</title>
+              <path
+                d="M32 30.586l-10.845-10.845c1.771-2.092 2.845-4.791 2.845-7.741 0-6.617-5.383-12-12-12s-12 5.383-12 12c0 6.617 5.383 12 12 12 2.949 0 5.649-1.074 7.741-2.845l10.845 10.845 1.414-1.414zM12 22c-5.514 0-10-4.486-10-10s4.486-10 10-10c5.514 0 10 4.486 10 10s-4.486 10-10 10z">
+              </path>
+            </svg>
+            <input placeholder="Search for posts" />
+          </label>
+        </form>
+        <div class="mobile-menuItems">
+          <a class="btn btn--main btn--pill mobile_topics" href="#" id="mobile_topics">Browse Topics</a>
+          <a class="btn btn--main btn--pill mobile_acts" href="#" id="mobile_acts">Recent Activities</a>
+        </div>
+      </div>
+      <div class="roomList__header">
+        <div>
+          <h2>Study Room</h2>
+          <p>{{rooms.count}} Rooms available</p>
+        </div>
+        <a class="btn btn--main" href="{% url 'create-room' %}">
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+            <title>add</title>
+            <path
+              d="M16.943 0.943h-1.885v14.115h-14.115v1.885h14.115v14.115h1.885v-14.115h14.115v-1.885h-14.115v-14.115z">
+            </path>
+          </svg>
+          Create Room
+        </a>
+      </div>
+      {% include 'base/components/feeds.html' %}
+
+    </div>
+    <!-- Room List End -->
+
+    <!-- Activities Start -->
+    <div class="activities">
+      <div class="activities__header">
+        <h2>Recent Activities
+          <span class="mobile_acts mobile_acts_s">Hide</span>
+        </h2>
+      </div>
+      {% include 'base/components/activities.html' %}
+    </div>
+    <!-- Activities End -->
+  </div>
+</main>
+
+<style>
+  .mobile_topics_s, .mobile_acts_s{
+    display: none;
+  }
+  /* 📱 Mobile view */
+  @media screen and (max-width: 767px) {
+
+    .activities,
+    .topics {
+      display: block;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #1e1e2f;
+      color: #fff;
+      border-top: 2px solid #444;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.4);
+      padding: 0.8rem 1rem;
+      max-height: 55vh;
+      overflow-y: auto;
+      transform: translateY(110vh);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .topics {
+      min-width: 100%;
+    }
+
+    /* When active */
+    .activities.active,
+    .topics.active {
+      transform: translateY(0);
+    }
+
+    .activities::-webkit-scrollbar,
+    .topics::-webkit-scrollbar {
+      display: none;
+    }
+
+    .activities__header h2,
+    .topics__header h2{
+      /* text-align: center; */
+      display: flex;
+      padding-left: .5em;
+      font-size: 1rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .mobile_topics_s, .mobile_acts_s{
+      display: block;
+font-weight: bold; color: #1e1e2f; background-color: #fff; padding: .2em .4em; border-radius: .2em;
+    }
+  }
+</style>
+
+{% endblock content %}

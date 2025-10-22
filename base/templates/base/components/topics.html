@@ -1,0 +1,12 @@
+<li>
+  <a href="{% url 'home' %}" class="active topicshow" >All <span>{{topics.count}}</span></a>
+</li>
+{% for topic in topics %}
+
+<li>
+  <a href="{% url 'home' %}?q={{ topic.name }}" class="topicshow">
+    {{ topic.name }} <span>{{ topic.room_set.all.count }}</span>
+  </a>
+</li>
+
+{% endfor %}

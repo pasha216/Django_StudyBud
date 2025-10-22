@@ -1,0 +1,58 @@
+{% extends 'main.html' %} {% block content %}
+<div class="layout__box">
+  <div class="layout__body">
+    <form class="form" action="" method="POST">
+      {% csrf_token %}
+
+      <div class="form__group">
+        <label for="{{ form.topic.id_for_label }}">Topic</label>
+        {{ form.topic }} {% if form.topic.errors %}
+        <p class="text-danger">{{ form.topic.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <div class="form__group">
+        <label for="{{ form.name.id_for_label }}">Name</label>
+        {{ form.name }} {% if form.name.errors %}
+        <p class="text-danger">{{ form.name.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <div class="form__group">
+        <label for="{{ form.discription.id_for_label }}">Description</label>
+        {{ form.description }} {% if form.description.errors %}
+        <p class="text-danger">{{ form.description.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+
+      {% if page == 'create' %}
+      <button class="btn btn--main" type="submit">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+          <title>Create Room</title>
+          <path d="M12 5v14m-7-7h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        Create
+      </button>
+      {% endif %}
+
+
+      {% if page == 'update' %}
+      <button class="btn btn--main" type="submit">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+          <title>Update Room</title>
+          <path
+            d="M3 21v-3.75l11.06-11.06 3.75 3.75L6.75 21H3zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+        </svg>
+
+        Update
+      </button>
+      {% endif %}
+
+      <a href="{% url 'home' %}"
+        style="display: inline-block; margin-left: 20%; width: 50%; text-align: right;">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock content %}

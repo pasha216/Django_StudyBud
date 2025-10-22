@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="{% static 'styles/style.css' %}" />
+  <title>StudyBuddy - Find study partners around the world!</title>
+  <style>
+    body {
+      max-height: 90vh;
+      overflow: hidden;
+    }
+
+    .container .activities div h2 {
+      padding-right: .5em;
+    }
+
+    .container .activities,
+    .container .roomList {
+      max-height: 90vh;
+      overflow: scroll;
+      padding-bottom: 3em;
+      padding-right: .5em;
+    }
+
+    * {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      /* Internet Explorer 10+ */
+    }
+
+    *::-webkit-scrollbar {
+      display: none;
+      /* Chrome, Safari, Opera */
+    }
+
+
+    /* Base styling for the notification bar */
+.notification-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* padding: 15px; */
+  background-color: #0000002d; 
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+
+/* Optional: Add a class to hide the bar with an animation */
+.notification-bar.hidden {
+  transform: translateY(-100%);
+}
+
+/* Style the close button */
+.close-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  margin-left: auto; /* Pushes the button to the far right */
+  padding: 0 10px;
+}
+
+/* General list and list item styling */
+.notification-bar .messages {
+  list-style-type: none; /* Remove list item markers */
+  margin: 0;
+  flex-grow: 1;
+}
+
+.notification-bar .messages li {
+  font-weight: bold;
+  margin: 0;
+  padding: .3em;
+}
+
+/* Customize colors based on message tags (Django defaults) */
+.notification-bar .success {
+  background-color: #27ae60; /* A shade of green */
+}
+.notification-bar .info {
+  background-color: #3498db; /* A shade of blue */
+}
+.notification-bar .warning {
+  background-color: #f1c40f; /* A shade of yellow */
+  color: #333; /* Darken text for contrast */
+}
+.notification-bar .error {
+  background-color: #e74c3c; /* A shade of red */
+}
+
+  </style>
+</head>
+
+<body>
+
+  {% include 'navbar.html' %}
+
+  {% if messages %}
+  <div class="notification-bar">
+    <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    <button class="close-button">×</button>
+  </div>
+  {% endif %}
+  
+  {% block content %}
+
+  {% endblock %}
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+
+</html>
