@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   setTimeout(()=>{
     notificationBar.classList.add('hidden')
-  }, 2000)
+  }, 5000)
 });
 
 

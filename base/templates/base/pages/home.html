@@ -20,7 +20,7 @@
         {% include 'base/components/topics.html' %}
 
       </ul>
-      <a class="btn btn--link" href="topics.html">
+      <a class="btn btn--link" href="{% url 'topics' %}">
         More
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
           <title>chevron-down</title>
@@ -108,8 +108,9 @@
       z-index: 1000;
     }
 
-    .topics {
+    .topics, .activities {
       min-width: 100%;
+      background-color: var(--color-dark);
     }
 
     /* When active */

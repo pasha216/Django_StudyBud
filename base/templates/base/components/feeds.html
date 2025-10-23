@@ -11,7 +11,7 @@
       </div>
   </div>
   <div class="roomListRoom__content">
-    <a href="{% url 'room' room.id %}"> {{room.name}} </a>
+    <a href="{% url 'room' room.id %}" class="showRoom"> {{room.name}} <span class="roomListRoom__topic">Show</span> </a>
     <p>
       {{room.description}}
     </p>
@@ -51,7 +51,12 @@
   .my-actions{
     padding-top: 1em;
   }
-  .my-actions a{
+  .my-actions a, .showRoom span{
     border-radius: .4em;
+  }
+  .showRoom{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 </style>

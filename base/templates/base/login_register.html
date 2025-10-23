@@ -12,16 +12,16 @@
             {%if page == 'register' %}
             <h3>Sign Up</h3>
             {% else %}
-            <h3>Update Profile</h3> 
+            <h3>Change {{request.user}} Password</h3> 
             {% endif %}
           {% endif %}
             
         </div>
       </div>
       <div class="layout__body">
-        <h2 class="auth__tagline">Find your study partner</h2>
-
+        
         {% if page == 'login' %}
+        <h2 class="auth__tagline">Find your study partner</h2>
         <form class="form" action="#" method="POST">
           {% csrf_token %}
           <div class="form__group form__group">
@@ -59,27 +59,35 @@
 
         {% if page == 'update' %}
 
-        <form class="form" action="" method="POST">
+        <form class="form" action="" method="POST" id="formy">
           {% csrf_token %}
+
 
           <div class="form__group">
             <label for="{{ form.username.id_for_label }}">Username</label>
             {{ form.username }}
-            {% if form.username.errors %}
-            <p class="text-danger">{{ form.username.errors.0 }}</p>
+            {% if form.password.errors %}
+            <p class="text-danger">{{ form.password2.errors.0 }}</p>
             {% endif %}
           </div>
-
           <div class="form__group">
             <label for="{{ form.password.id_for_label }}">Password</label>
             {{ form.password }}
             {% if form.password.errors %}
-            <p class="text-danger">{{ form.password1.errors.0 }}</p>
+            <p class="text-danger">{{ form.password2.errors.0 }}</p>
             {% endif %}
           </div>
 
 
-          <button class="btn btn--main" type="submit">
+          <div class="form__group">
+            <label for="{{ form.password2.id_for_label }}">Password Again</label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+            <p class="text-danger">{{ form.password2.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <button class="btn btn--main" type="submit" id="sbtn">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
               <title>lock</title>
               <path
@@ -91,6 +99,17 @@
             </svg>
             Update
           </button>
+          <script>
+            const sbtn = document.querySelector('#sbtn')
+            const password1 = document.querySelector('#id_password')
+            const password2 = document.querySelector('#id_password2')
+            const form = document.querySelector("#formy")
+            sbtn.addEventListener('click', ()=>{
+              if (password1.value != password2.value){
+                form.innerHTML = '<h1>Passwords Doesn\'t Match</h1>'
+              }
+            })
+          </script>
         </form>
 
         <div class="auth__action">
@@ -110,8 +129,8 @@
         {% if page == 'register' %}
 
         <form class="form" action="" method="POST">
-          {% csrf_token %}
-
+          {% csrf_token %}           
+              
           <div class="form__group">
             <label for="{{ form.username.id_for_label }}">Username</label>
             {{ form.username }}

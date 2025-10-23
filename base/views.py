@@ -7,18 +7,15 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm
 
 from .models import Room, Topic, Message
 
-from .forms import RoomForm
+from .forms import RoomForm, UserForm, passwordChangeForm
 
 from django.http import HttpResponse
 
 
-from django import forms
-from django.core.exceptions import ValidationError
-from django.contrib.auth.password_validation import validate_password
 from django.shortcuts import get_object_or_404
 # Create your views here.
 
@@ -68,12 +65,14 @@ def register_page(request):
 def home(request):
     q = request.GET.get("q") if request.GET.get("q") != None else ""
     rooms = Room.objects.filter(Q(topic__name__icontains=q) | Q(name__icontains=q))
-    topics = Topic.objects.all()
+    topics = Topic.objects.all()[0:5]
     room_messages= Message.objects.filter(Q(room__topic__name__icontains=q))
     rooms_count = rooms.count()
+    topics_count = Room.objects.count
     context = {
         "rooms": rooms,
         "topics": topics, 
+        "topics_count": topics_count,
         "room_messages":room_messages,
         "rooms_count": rooms_count,}
 
@@ -102,6 +101,7 @@ def profile(request, pk):
     rooms = user.room_set.all()
     
     topics = Topic.objects.all()
+    topics_count = Room.objects.count
     room_messages = user.message_set.all()
     # room_messages= Message.objects.filter(Q(room__topic__name__icontains=q))
 
@@ -109,57 +109,38 @@ def profile(request, pk):
         'user': user,
         'rooms':rooms,
         'topics':topics,
+        'topics_count':topics_count,
         'room_messages':room_messages
         }
     return render(request, 'base/pages/profile.html', context)
 
+def topics(request):
+    q = request.GET.get("q") if request.GET.get("q") != None else ""
+    topics = Topic.objects.filter(Q(name__icontains=q))
+    topics_count = Room.objects.count
+
+    return render(request, 'base/pages/topics.html',{'topics':topics, 'topics_count':topics_count})
 
 @login_required(login_url="/login/")
 def create_room(request):
     form = RoomForm()
+    topics = Topic.objects.all() 
+    topics_count = Room.objects.count
     if request.method == "POST":
-        form = RoomForm(request.POST)
-        if form.is_valid():
-            room = form.save(commit=False)
-            room.host = request.user
-            form.save()
-            return redirect("home")
-    context = {"form": form, 'page':'create'}
+        topic_name = request.POST.get('topic')
+        topic, created = Topic.objects.get_or_create(name=topic_name)
+        Room.objects.create(
+            host=request.user,
+            topic=topic,
+            name=request.POST.get('name'),
+            description=request.POST.get('decription')
+        )
+        return redirect("home")
+    context = {"form": form, 'page':'create', 'topics':topics, 'topics_count':topics_count}
     return render(request, "base/room_form.html", context)
-
-
-
-class CustomUserForm(UserChangeForm):
-    password = forms.CharField(
-        required=True,  # now it's required
-        widget=forms.PasswordInput,
-        help_text="Enter a new password"
-    )
-
-    class Meta(UserChangeForm.Meta):
-        model = User
-        fields = ("username", "email")
-
-    def clean_password(self):
-        password = self.cleaned_data.get("password")
-        if password:
-            # Use Django's built-in password validators
-            validate_password(password, self.instance)
-            return password
-        raise ValidationError("Password cannot be empty")
-
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password"])
-        if commit:
-            user.save()
-        return user
-
-
-
 # View
 @login_required
-def update_user(request, pk):
+def update_password(request, pk):
     user = get_object_or_404(User, pk=pk)
 
     # Optional: only allow users to edit themselves
@@ -167,10 +148,12 @@ def update_user(request, pk):
         messages.error(request, "You cannot edit another user.")
         return redirect("home")
 
-    form = CustomUserForm(instance=user)
+    # form = CustomUserForm(instance=user)
+    form = passwordChangeForm(instance=user)
 
     if request.method == "POST":
-        form = CustomUserForm(request.POST, instance=user)
+        # form = CustomUserForm(request.POST, instance=user)
+        form = passwordChangeForm(request.POST, instance=user)
         if form.is_valid():
             userdata = form.save()
             login(request, userdata)  # keep user logged in if password changed
@@ -182,6 +165,26 @@ def update_user(request, pk):
     context = {"page": "update", "form": form}
     return render(request, "base/login_register.html", context)
 
+@login_required
+def update_profile(request, pk):
+    user = User.objects.get(id=pk)
+    if request.user == user:
+        form = UserForm(instance=user)
+        if request.method == 'POST':
+            form = UserForm(request.POST, instance=user)
+            if form.is_valid():
+                form.save()
+                return redirect('profile', pk)
+    else:
+
+        messages.error(request, "This Is Not Your Profile")
+        return redirect('home')
+
+    context = {
+        'user':user,
+        'form':form
+    }
+    return render(request, 'base/pages/edit-user.html', context)
 
 @login_required(login_url="/login/")
 def update_room(request, pk):
@@ -191,11 +194,17 @@ def update_room(request, pk):
         return HttpResponse("Not Allowed")
 
     if request.method == "POST":
-        form = RoomForm(request.POST, instance=room)
-        if form.is_valid:
-            form.save()
-            return redirect("home")
-    context = {"form": form, 'page':'update'}
+        topic_name = request.POST.get('topic')
+        topic, created = Topic.objects.get_or_create(name=topic_name)
+        
+        room.topic=topic
+        room.name=request.POST.get('name')
+        room.description=request.POST.get('decription')
+        room.save()        
+
+        return redirect("home")
+
+    context = {"room": room, "form": form, 'page':'update'}
     return render(request, "base/room_form.html", context)
 
 

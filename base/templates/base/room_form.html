@@ -6,10 +6,18 @@
 
       <div class="form__group">
         <label for="{{ form.topic.id_for_label }}">Topic</label>
-        {{ form.topic }} {% if form.topic.errors %}
-        <p class="text-danger">{{ form.topic.errors.0 }}</p>
-        {% endif %}
+        <input required type="text" name="topic" list="topic-list" value="{{room.topic}}">
+        <datalist id="topic-list">
+          <select name="" id="topic-select">
+            
+            {% for topic in topics %}
+              <option value="{{topic}}">{{topic}}</option>
+            {% endfor %}
+              
+          </select>
+        </datalist>
       </div>
+      
 
       <div class="form__group">
         <label for="{{ form.name.id_for_label }}">Name</label>
