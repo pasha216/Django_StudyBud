@@ -131,21 +131,21 @@ a {
   cursor: pointer;
 }
 
-.avatar {
+.avatar.url {
   position: relative;
   display: inline-block;
   border-radius: 50%;
   border: 2px solid var(--color-main);
 }
 
-.avatar img {
+.avatar.url img {
   display: block;
   border-radius: 50%;
   object-fit: cover;
   object-position: center;
 }
 
-.avatar::after {
+.avatar.url::after {
   content: "";
   display: block;
   position: absolute;
@@ -155,43 +155,43 @@ a {
   border: 0.3rem solid var(--color-dark);
 }
 
-.avatar.active::after {
+.avatar.url.active::after {
   background-color: var(--color-success);
 }
 
-.avatar.avatar--small img {
+.avatar.url.avatar.url--small img {
   width: 2.8rem;
   height: 2.8rem;
 }
 
-.avatar.avatar--small:after {
+.avatar.url.avatar.url--small:after {
   width: 0.7rem;
   height: 0.7rem;
   bottom: 0px;
   right: -6px;
 }
 
-.avatar.avatar--medium img {
+.avatar.url.avatar.url--medium img {
   width: 3.6rem;
   height: 3.6rem;
   border-radius: 50%;
 }
 
-.avatar.avatar--medium:after {
+.avatar.url.avatar.url--medium:after {
   width: 0.7rem;
   height: 0.7rem;
   bottom: 0px;
   right: -6px;
 }
 
-.avatar.avatar--large img {
+.avatar.url.avatar.url--large img {
   display: block;
   width: 8rem;
   height: 8rem;
   border-radius: 50%;
 }
 
-.avatar.avatar--large:after {
+.avatar.url.avatar.url--large:after {
   width: 1rem;
   height: 1rem;
   bottom: 2px;
@@ -845,7 +845,7 @@ a {
   justify-content: center;
 }
 
-.settings__avatar .avatar {
+.settings__avatar .avatar.url {
   margin: 1rem;
 }
 
