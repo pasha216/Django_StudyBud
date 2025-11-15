@@ -75,7 +75,7 @@ Contributions are welcome! Please open issues or submit pull requests to improve
 
 ## License
 
-[Specify your license here]
+[MIT Licence]
 
 ---
 
